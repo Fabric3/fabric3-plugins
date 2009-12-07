@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ASCII"?>
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+              xmlns:f3-maven="urn:fabric3.org:maven"
+              xmlns:f3-core="urn:fabric3.org:core">
+    <f3-maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-spi" version="0.4-SNAPSHOT"/>
+    <deployable composite="f3:BurlapBindingExtension"/>
+</contribution>

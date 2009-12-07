@@ -1,0 +1,91 @@
+~~ See the NOTICE file distributed with this work for information
+~~ regarding copyright ownership.  This file is licensed
+~~ to you under the Apache License, Version 2.0 (the
+~~ "License"); you may not use this file except in compliance
+~~ with the License.  You may obtain a copy of the License at
+~~
+~~   http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing,
+~~ software distributed under the License is distributed on an
+~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~~ KIND, either express or implied.  See the License for the
+~~ specific language governing permissions and limitations
+~~ under the License.
+
+Usage
+
+  The <<fabric3-webapp-plugin>> helps build a JavaEE Web Application (WAR) containing a local fabric3 runtime.
+  It handles packaging for all the jars needed for the runtime itself, and simplifes installing extension
+  contributions.
+
+  To build a simple war file you just need to:
+  
+    * set the project packaging to war
+
+    * add the fabric3 webapp api to the war classpath (as a regular dependency)
+    
+    * add the fabric3 runtime jars to the war in WEB-INF/fabric3/boot directory
+
+  Here's a simple maven project that does these:
+
++---+
+<project>
+    <groupId>org.example</groupId>
+    <artifactId>example-webapp</artifactId>
+    <version>SNAPSHOT</version>
+
+    <!-- set the packaging as war which will activate the maven-war-plugin -->
+    <packaging>war</packaging>
+
+    <dependencies>
+        <!-- use the released version of the fabric3 API -->
+        <dependency>
+            <groupId>org.codehaus.fabric3.webapp</groupId>
+            <artifactId>fabric3-webapp-api</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- use the fabric3-webapp-plugin to add the runtime jars to the war -->
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-webapp-plugin</artifactId>
+                <version>RELEASE</version>
+                <executions>
+                    <execution>
+                        <id>fabric3-war</id>
+                        <goals>
+                            <goal>fabric3-war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
++---+
+
+* Bootstrapping the Runtime
+
+  The simplest way to boot the fabric3 runtime inside your webapp is to do it when the application
+  starts using a ServletContextListener. If you have references from Servlets or JSPs to local
+  SCA components, you also need to notify the runtime when the request starts which can be done
+  using a ServletRequestListener.
+
+  Default implementations of these are provided in the fabric3-webapp-api and all you need to
+  do to use them is include the following entries in your <<web.xml>>:
+
++---+
+    <!-- ServletContextListener that boots the fabric3 runtime -->
+    <listener>
+        <listener-class>org.fabric3.runtime.webapp.Fabric3ContextListener</listener-class>
+    </listener>
+
+    <!-- RequestContextListener that notifies the runtime a request is being processed -->
+    <listener>
+        <listener-class>org.fabric3.runtime.webapp.Fabric3RequestListener</listener-class>
+    </listener>
++---+
