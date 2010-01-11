@@ -15,13 +15,13 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins-parent-pom</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-assembly-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Runtime Assembly Plugin</name>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <description>Fabric3 Runtime Assembly Plugin.</description>
 
    <dependencies>
