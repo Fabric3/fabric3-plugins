@@ -266,7 +266,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             InputStream sourceStream = null;
             OutputStream targetStream = null;
             try {
-                File repository = new File(rootDirectory, "repository");
+                File repository = new File(rootDirectory, "extensions");
                 sourceStream = new BufferedInputStream(new FileInputStream(source));
                 File targetFile = new File(repository, source.getName());
                 targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
