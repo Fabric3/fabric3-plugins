@@ -168,6 +168,13 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      */
     public ConfigFile[] configurationFiles = new ConfigFile[0];
 
+    /**
+     * Set of extensions for the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] removeExtensions = new Dependency[0];
+
     public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
     }
 
@@ -190,6 +197,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
         installConfiguration(rootDirectory);
+        removeExtensions(rootDirectory);
     }
 
     /**
@@ -305,6 +313,29 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             } finally {
                 close(targetStream);
                 close(sourceStream);
+            }
+        }
+    }
+
+    /**
+     * Removes extensions from the server image.
+     *
+     * @param rootDirectory the top-level runtime image directory
+     * @throws MojoExecutionException if there is an error
+     */
+    private void removeExtensions(File rootDirectory) throws MojoExecutionException {
+        for (Dependency extension : removeExtensions) {
+            String id = extension.getArtifactId();
+            String version = extension.getVersion();
+            if (version == null) {
+                throw new MojoExecutionException("Version not specified for: " + id);
+            }
+            String fileName = id + "-" + version + ".jar";
+            File extensionsDir = new File(rootDirectory, "extensions");
+            File file = new File(extensionsDir, fileName);
+            boolean result = file.delete();
+            if (!result) {
+                throw new MojoExecutionException("Unable to exclude: " + file);
             }
         }
     }
