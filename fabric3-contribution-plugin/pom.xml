@@ -20,7 +20,7 @@ Public License. See the accompanying license file for details.
     <version>1.6-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Contribution Plugin</name>
-    <description>Fabric3 Contribution Plugin.</description>
+    <description>Plugin for creating contributions</description>
 
     <dependencies>
         <dependency>
