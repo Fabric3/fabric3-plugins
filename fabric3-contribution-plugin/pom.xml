@@ -13,11 +13,11 @@ Public License. See the accompanying license file for details.
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins-parent-pom</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-contribution-plugin</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Contribution Plugin</name>
     <description>Plugin for creating contributions</description>
