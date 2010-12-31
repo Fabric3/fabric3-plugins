@@ -158,16 +158,6 @@ public class Fabric3ContributionMojo extends AbstractMojo {
      */
     protected String packaging;
 
-    /**
-     * @parameter
-     */
-    protected File composite;
-
-    /**
-     * @parameter
-     */
-    protected String compositeFile = "composite.composite";
-
     public void execute() throws MojoExecutionException, MojoFailureException {
         // the project packaging is set to output a ZIP-based contribution
         File contribution = createArchive();
