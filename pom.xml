@@ -28,7 +28,7 @@
     <name>Fabric3 Plugins Parent POM</name>
     <description>Fabric3 Plugins Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
 
     <modules>
         <module>fabric3-contribution-plugin</module>
@@ -37,8 +37,8 @@
     </modules>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk</developerConnection>
-    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/trunk</url>
+    <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-1.7</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-1.7</developerConnection>
+    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/tags/fabric3-plugins-parent-pom-1.7</url>
   </scm>
 </project>
