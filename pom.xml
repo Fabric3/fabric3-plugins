@@ -32,7 +32,6 @@
 
     <modules>
         <module>fabric3-contribution-plugin</module>
-        <module>fabric3-webapp-plugin</module>
         <module>fabric3-assembly-plugin</module>
     </modules>
 
