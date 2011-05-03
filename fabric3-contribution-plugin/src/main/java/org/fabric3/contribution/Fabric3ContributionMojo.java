@@ -82,6 +82,7 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
  * @version $Rev$ $Date$
  * @goal package
  * @phase package
+ * @requiresDependencyResolution runtime
  */
 public class Fabric3ContributionMojo extends AbstractMojo {
     private static final String JAR_PACKAGING = "sca-contribution-jar";

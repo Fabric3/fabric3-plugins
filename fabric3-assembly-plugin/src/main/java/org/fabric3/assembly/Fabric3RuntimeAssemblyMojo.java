@@ -249,7 +249,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     }
 
     /**
-     * Resolves and  installs a set of configured extensions by copying them to a runtime image repository
+     * Resolves and installs a set of configured extensions by copying them to a runtime image repository
      *
      * @param rootDirectory the top-level runtime image directory
      * @throws MojoExecutionException if there is an error during installation
