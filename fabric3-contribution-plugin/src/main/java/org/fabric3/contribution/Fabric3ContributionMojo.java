@@ -57,7 +57,7 @@ import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 /**
- * Builds an SCA contribution. Two contribution types are currently supported, ZIP- and XML-based.
+ * Builds an SCA contribution.
  * <p/>
  * Contribution archives may be jars or zip files as specified by the respective Maven packaging entries,
  * <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code> and <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code>. Any
