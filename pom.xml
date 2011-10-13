@@ -28,7 +28,7 @@
     <name>Fabric3 Plugins Parent POM</name>
     <description>Fabric3 Plugins Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.9.5-SNAPSHOT</version>
 
     <modules>
         <module>fabric3-contribution-plugin</module>
