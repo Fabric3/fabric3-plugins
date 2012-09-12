@@ -27,7 +27,7 @@
     <name>Fabric3 Plugins Parent POM</name>
     <description>Fabric3 Plugins Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.9.5-SNAPSHOT</version>
+    <version>1.9.5</version>
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -109,7 +109,7 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <Private-Package/>
+                            <Private-Package />
                         </instructions>
                     </configuration>
                 </plugin>
@@ -221,8 +221,8 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/trunk</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-plugins-parent-pom-1.9.5</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-plugins-parent-pom-1.9.5</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/modules/tags/fabric3-plugins-parent-pom-1.9.5</url>
     </scm>
 </project>
