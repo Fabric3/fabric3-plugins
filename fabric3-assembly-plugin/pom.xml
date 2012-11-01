@@ -14,7 +14,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-plugins-parent-pom</artifactId>
+        <artifactId>fabric3-plugins</artifactId>
         <version>1.9.7-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>

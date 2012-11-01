@@ -23,7 +23,7 @@
         <version>7</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-plugins-parent-pom</artifactId>
+    <artifactId>fabric3-plugins</artifactId>
     <name>Fabric3 Plugins Parent POM</name>
     <description>Fabric3 Plugins Parent POM.</description>
     <packaging>pom</packaging>
