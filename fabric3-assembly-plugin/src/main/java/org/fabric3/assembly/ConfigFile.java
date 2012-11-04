@@ -39,8 +39,6 @@ package org.fabric3.assembly;
 
 /**
  * Represents a configuration file to be copied to the runtime image.
- *
- * @version $Rev$ $Date$
  */
 public class ConfigFile {
     private String source;

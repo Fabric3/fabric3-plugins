@@ -79,7 +79,6 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
  *  &lt;/build&gt;
  * </pre>
  *
- * @version $Rev$ $Date$
  * @goal package
  * @phase package
  * @requiresDependencyResolution runtime

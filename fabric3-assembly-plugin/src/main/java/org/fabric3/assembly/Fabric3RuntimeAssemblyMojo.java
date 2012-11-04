@@ -72,7 +72,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 /**
  * Plugin that builds a Fabric3 runtime image based on a set of profiles and/or extensions. Standalone and Tomcat runtime images are supported.
  *
- * @version $Rev$ $Date$
  * @goal fabric3-assembly
  * @phase generate-resources
  */
