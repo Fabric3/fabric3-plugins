@@ -29,6 +29,11 @@
     <packaging>pom</packaging>
     <version>1.9.7-SNAPSHOT</version>
 
+    <modules>
+        <module>fabric3-contribution-plugin</module>
+        <module>fabric3-assembly-plugin</module>
+    </modules>
+
     <build>
         <defaultGoal>install</defaultGoal>
     </build>
@@ -82,25 +87,6 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>repository.codehaus.org</id>
-            <name>Fabric3 Releases</name>
-            <url>http://repository.codehaus.org/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <modules>
-        <module>fabric3-contribution-plugin</module>
-        <module>fabric3-assembly-plugin</module>
-    </modules>
 
     <scm>
         <connection>scm:git:git@github.com:Fabric3/fabric3-plugins.git</connection>
