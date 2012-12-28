@@ -168,11 +168,19 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     public ConfigFile[] configurationFiles = new ConfigFile[0];
 
     /**
-     * Set of extensions for the runtime.
+     * Set of extensions to remove for the runtime.
      *
      * @parameter
      */
     public Dependency[] removeExtensions = new Dependency[0];
+
+    /**
+     * Set of contributions to install in the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] contributions = new Dependency[0];
+
 
     public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
     }
@@ -195,6 +203,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         extractRuntime("org.codehaus.fabric3", artifactId, baseDirectory);
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
+        installContributions(rootDirectory);
         installConfiguration(rootDirectory);
         removeExtensions(rootDirectory);
     }
@@ -315,6 +324,49 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             }
         }
     }
+
+    /**
+     * Installs contributions to the user repository.
+     *
+     * @param rootDirectory the top-level runtime image directory
+     * @throws MojoExecutionException if there is an error during installation
+     */
+    private void installContributions(File rootDirectory) throws MojoExecutionException {
+        for (Dependency contribution : contributions) {
+            String groupId = contribution.getGroupId();
+            String artifactId = contribution.getArtifactId();
+            String version = contribution.getVersion();
+            String type = contribution.getType();
+            String classifier = contribution.getClassifier();
+            getLog().info("Installing contribution: " + groupId + ":" + artifactId);
+            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            try {
+                resolver.resolve(artifact, remoteRepositories, localRepository);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (ArtifactNotFoundException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+            File source = artifact.getFile();
+            InputStream sourceStream = null;
+            OutputStream targetStream = null;
+            try {
+                File repository =
+                        new File(rootDirectory, "runtimes" + File.separator + "vm" + File.separatorChar + "repository" + File.separatorChar + "user");
+                sourceStream = new BufferedInputStream(new FileInputStream(source));
+                File targetFile = new File(repository, source.getName());
+                targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
+                copy(sourceStream, targetStream);
+            } catch (IOException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } finally {
+                close(targetStream);
+                close(sourceStream);
+            }
+        }
+
+    }
+
 
     /**
      * Removes extensions from the server image.
