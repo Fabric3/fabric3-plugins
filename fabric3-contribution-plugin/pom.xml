@@ -41,7 +41,7 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
