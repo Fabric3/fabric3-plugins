@@ -7,7 +7,7 @@ This repository hosts Fabric3 Maven plugins. Information on Fabric3 can be found
 Building the Plugins
 ------------------------
 
-Requirements are JDK 6 and Maven 3.0.4+.
+Requirements are JDK 7 and Maven 3.0.4+.
 
 To build the source, execute:
 
