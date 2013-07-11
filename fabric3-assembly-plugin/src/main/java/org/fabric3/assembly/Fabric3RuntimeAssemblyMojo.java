@@ -43,6 +43,7 @@
  */
 package org.fabric3.assembly;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -57,7 +58,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -79,6 +79,20 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     private static final int BUFFER = 2048;
     private static final String RUNTIME_STANDALONE = "standalone";
     private static final String RUNTIME_TOMCAT = "tomcat";
+
+    /**
+     * Runtime configuration where the contributions should be copied.
+     *
+     * @parameter
+     */
+    public String contributionTarget = "vm";
+
+    /**
+     * True if non-target runtime configurations should be removed.
+     *
+     * @parameter
+     */
+    public boolean clean;
 
     /**
      * Directory where the runtime image is built.
@@ -181,7 +195,6 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      */
     public Dependency[] contributions = new Dependency[0];
 
-
     public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
     }
 
@@ -206,6 +219,30 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         installContributions(rootDirectory);
         installConfiguration(rootDirectory);
         removeExtensions(rootDirectory);
+
+        if (clean) {
+            cleanRuntimes(rootDirectory);
+        }
+    }
+
+    /**
+     * Cleans the runtime directories.
+     *
+     * @param rootDirectory root runtime image
+     * @throws MojoExecutionException if there is an error
+     */
+    private void cleanRuntimes(File rootDirectory) throws MojoExecutionException {
+        File runtimes = new File(rootDirectory, "runtimes");
+        for (File file : runtimes.listFiles()) {
+            if (file.isDirectory() && !contributionTarget.equals(file.getName())) {
+                try {
+                    FileHelper.forceDelete(file);
+                } catch (IOException e) {
+                    getLog().error(e);
+                    throw new MojoExecutionException(e.getMessage());
+                }
+            }
+        }
     }
 
     /**
@@ -296,7 +333,6 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         }
     }
 
-
     /**
      * Installs configuration files to the server image.
      *
@@ -326,7 +362,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     }
 
     /**
-     * Installs contributions to the user repository.
+     * Installs contributions to the deploy directory.
      *
      * @param rootDirectory the top-level runtime image directory
      * @throws MojoExecutionException if there is an error during installation
@@ -351,8 +387,8 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             InputStream sourceStream = null;
             OutputStream targetStream = null;
             try {
-                File repository =
-                        new File(rootDirectory, "runtimes" + File.separator + "vm" + File.separatorChar + "repository" + File.separatorChar + "user");
+                File repository = new File(rootDirectory, "runtimes" + File.separator + contributionTarget + File.separatorChar + "deploy");
+                repository.mkdirs();
                 sourceStream = new BufferedInputStream(new FileInputStream(source));
                 File targetFile = new File(repository, source.getName());
                 targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
@@ -366,7 +402,6 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         }
 
     }
-
 
     /**
      * Removes extensions from the server image.
