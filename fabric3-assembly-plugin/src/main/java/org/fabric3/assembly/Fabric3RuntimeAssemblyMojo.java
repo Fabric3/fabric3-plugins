@@ -195,6 +195,13 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      */
     public Dependency[] contributions = new Dependency[0];
 
+    /**
+     * Set of datasources to install in the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] datasources = new Dependency[0];
+
     public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
     }
 
@@ -216,6 +223,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         extractRuntime("org.codehaus.fabric3", artifactId, baseDirectory);
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
+        installDatasources(rootDirectory);
         installContributions(rootDirectory);
         installConfiguration(rootDirectory);
         removeExtensions(rootDirectory);
@@ -401,6 +409,52 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             }
         }
 
+    }
+
+    /**
+     * Resolves and installs a set of configured datasource dependencies.
+     *
+     * @param rootDirectory the top-level runtime image directory
+     * @throws MojoExecutionException if there is an error during installation
+     */
+    private void installDatasources(File rootDirectory) throws MojoExecutionException {
+        if (datasources == null || datasources.length == 0) {
+            return;
+        }
+        File repository = new File(rootDirectory, "extensions");
+        File datasourceDir = new File(repository, "datasource");
+        datasourceDir.mkdirs();
+        for (Dependency dependency : datasources) {
+            String groupId = dependency.getGroupId();
+            String artifactId = dependency.getArtifactId();
+            String version = dependency.getVersion();
+            String type = dependency.getType();
+            String classifier = dependency.getClassifier();
+            getLog().info("Installing datasource library: " + groupId + ":" + artifactId);
+            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            try {
+                resolver.resolve(artifact, remoteRepositories, localRepository);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (ArtifactNotFoundException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+
+            File source = artifact.getFile();
+            InputStream sourceStream = null;
+            OutputStream targetStream = null;
+            try {
+                sourceStream = new BufferedInputStream(new FileInputStream(source));
+                File targetFile = new File(datasourceDir, source.getName());
+                targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
+                copy(sourceStream, targetStream);
+            } catch (IOException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } finally {
+                close(targetStream);
+                close(sourceStream);
+            }
+        }
     }
 
     /**
