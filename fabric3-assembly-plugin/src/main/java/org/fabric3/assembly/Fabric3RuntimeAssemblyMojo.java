@@ -74,6 +74,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal fabric3-assembly
  * @phase generate-resources
+ * @threadSafe
  */
 public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     private static final int BUFFER = 2048;
