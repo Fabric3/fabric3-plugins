@@ -32,6 +32,7 @@
     <modules>
         <module>fabric3-contribution-plugin</module>
         <module>fabric3-assembly-plugin</module>
+        <module>fabric3-packager-plugin</module>
     </modules>
 
     <build>
