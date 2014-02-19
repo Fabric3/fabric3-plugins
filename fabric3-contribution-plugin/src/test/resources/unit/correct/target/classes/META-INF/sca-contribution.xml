@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
-              xmlns:f3="urn:fabric3.org">
-    <deployable composite="f3:BurlapBindingExtension"/>
-</contribution>

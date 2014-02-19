@@ -10,45 +10,32 @@
  licensed under the Apache 2.0 license.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins</artifactId>
         <version>2.5.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-packager-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Packager Plugin</name>
     <version>2.5.0-SNAPSHOT</version>
     <description>Fabric3 Packager Plugin.</description>
 
-   <dependencies>
+    <dependencies>
 
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>2.0</version>
+            <version>3.1.1</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
-            <version>2.0.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-artifact</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>1.4.1</version>
+            <groupId>org.eclipse.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>0.9.0.M2</version>
         </dependency>
 
     </dependencies>
@@ -58,7 +45,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2</version>
                 <configuration>
                     <goalPrefix>fabric3</goalPrefix>
                 </configuration>
@@ -71,7 +58,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2</version>
             </plugin>
         </plugins>
     </reporting>

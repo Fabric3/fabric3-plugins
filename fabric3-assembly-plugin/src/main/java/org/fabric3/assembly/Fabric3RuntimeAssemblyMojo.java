@@ -43,31 +43,29 @@
  */
 package org.fabric3.assembly;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
 
 /**
  * Plugin that builds a Fabric3 runtime image based on a set of profiles and/or extensions. Standalone and Tomcat runtime images are supported.
@@ -76,6 +74,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @phase generate-resources
  * @threadSafe
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     private static final int BUFFER = 2048;
     private static final String RUNTIME_STANDALONE = "standalone";
@@ -98,7 +97,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     /**
      * Directory where the runtime image is built.
      *
-     * @parameter expression="${project.build.directory}"
+     * @parameter property="project.build.directory"
      * @required
      */
     public File buildDirectory;
@@ -106,51 +105,15 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     /**
      * Project source directory.
      *
-     * @parameter expression="${project.build.sourceDirectory}"
+     * @parameter property="project.build.sourceDirectory"
      * @required
      */
     public File sourceDirectory;
 
     /**
-     * Used to look up Artifacts in the remote repository.
-     *
-     * @parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
-     * @required
-     * @readonly
-     */
-    public ArtifactFactory artifactFactory;
-
-    /**
-     * Used to look up Artifacts in the remote repository.
-     *
-     * @parameter expression="${component.org.apache.maven.artifact.resolver.ArtifactResolver}"
-     * @required
-     * @readonly
-     */
-    public ArtifactResolver resolver;
-
-    /**
-     * Location of the local repository.
-     *
-     * @parameter expression="${localRepository}"
-     * @readonly
-     * @required
-     */
-    public ArtifactRepository localRepository;
-
-    /**
-     * List of Remote Repositories used by the resolver
-     *
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     * @readonly
-     * @required
-     */
-    public List remoteRepositories;
-
-    /**
      * The default version of the runtime to use.
      *
-     * @parameter expression="RELEASE"
+     * @parameter property="RELEASE"
      */
     public String runtimeVersion;
 
@@ -203,7 +166,20 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      */
     public Dependency[] datasources = new Dependency[0];
 
-    public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
+    /**
+     * @component
+     */
+    public RepositorySystem repositorySystem;
+
+    /**
+     * The current repository/network configuration of Maven.
+     *
+     * @parameter default-value="${repositorySystemSession}"
+     * @readonly
+     */
+    public RepositorySystemSession session;
+
+    public Fabric3RuntimeAssemblyMojo() {
     }
 
     public void execute() throws MojoExecutionException {
@@ -263,16 +239,13 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      * @throws MojoExecutionException if there is an error extracting the distribution
      */
     private void extractRuntime(String groupId, String artifactId, File baseDirectory) throws MojoExecutionException {
-        String version = runtimeVersion;
-        Artifact runtimeArtifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, "zip", "bin");
+        Artifact artifact = new DefaultArtifact(groupId, artifactId, "bin", "zip", runtimeVersion);
         try {
             getLog().info("Installing the Fabric3 runtime");
-            resolver.resolve(runtimeArtifact, remoteRepositories, localRepository);
-            File source = runtimeArtifact.getFile();
+            ArtifactResult result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
+            File source = result.getArtifact().getFile();
             extract(source, baseDirectory);
         } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
     }
@@ -289,16 +262,14 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String artifactId = profile.getArtifactId();
             String version = profile.getVersion();
             getLog().info("Installing profile: " + groupId + ":" + artifactId);
-            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, "zip", "bin");
+            Artifact artifact = new DefaultArtifact(groupId, artifactId, "bin", "zip", version);
             try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
+                ArtifactResult result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
+                File source = result.getArtifact().getFile();
+                extract(source, rootDirectory);
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
             }
-            File source = artifact.getFile();
-            extract(source, rootDirectory);
         }
     }
 
@@ -316,15 +287,14 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String type = extension.getType();
             String classifier = extension.getClassifier();
             getLog().info("Installing extension: " + groupId + ":" + artifactId);
-            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            Artifact artifact = new DefaultArtifact(groupId, artifactId, classifier, type, version);
+            ArtifactResult result;
             try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
+                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
             }
-            File source = artifact.getFile();
+            File source = result.getArtifact().getFile();
             InputStream sourceStream = null;
             OutputStream targetStream = null;
             try {
@@ -384,15 +354,14 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String type = contribution.getType();
             String classifier = contribution.getClassifier();
             getLog().info("Installing contribution: " + groupId + ":" + artifactId);
-            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            Artifact artifact = new DefaultArtifact(groupId, artifactId, classifier, type, version);
+            ArtifactResult result;
             try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
+                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
             }
-            File source = artifact.getFile();
+            File source = result.getArtifact().getFile();
             InputStream sourceStream = null;
             OutputStream targetStream = null;
             try {
@@ -432,16 +401,16 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String type = dependency.getType();
             String classifier = dependency.getClassifier();
             getLog().info("Installing datasource library: " + groupId + ":" + artifactId);
-            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            Artifact artifact = new DefaultArtifact(groupId, artifactId, classifier, type, version);
+            //            Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
+            ArtifactResult result;
             try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
+                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
             } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
                 throw new MojoExecutionException(e.getMessage(), e);
             }
 
-            File source = artifact.getFile();
+            File source = result.getArtifact().getFile();
             InputStream sourceStream = null;
             OutputStream targetStream = null;
             try {
@@ -501,6 +470,10 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             if (entry.isDirectory()) {
                 new File(destination, entry.getName()).mkdirs();
             } else {
+                if (entry.getName().toUpperCase().endsWith(".MF")) {
+                    // ignore manifests
+                    continue;
+                }
                 InputStream sourceStream = null;
                 OutputStream targetStream = null;
                 try {
@@ -509,8 +482,6 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
                     targetStream = new BufferedOutputStream(fos, BUFFER);
                     copy(sourceStream, targetStream);
                     targetStream.flush();
-                } catch (FileNotFoundException e) {
-                    throw new MojoExecutionException(e.getMessage(), e);
                 } catch (IOException e) {
                     throw new MojoExecutionException(e.getMessage(), e);
                 } finally {

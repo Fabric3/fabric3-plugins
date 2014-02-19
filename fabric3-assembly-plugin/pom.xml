@@ -17,7 +17,6 @@
         <artifactId>fabric3-plugins</artifactId>
         <version>2.5.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-assembly-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Runtime Assembly Plugin</name>
@@ -25,32 +24,16 @@
     <description>Fabric3 Runtime Assembly Plugin.</description>
 
    <dependencies>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
-            <version>2.0.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-artifact</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-
+       <dependency>
+             <groupId>org.apache.maven</groupId>
+             <artifactId>maven-plugin-api</artifactId>
+             <version>3.1.1</version>
+         </dependency>
+         <dependency>
+             <groupId>org.eclipse.aether</groupId>
+             <artifactId>aether-api</artifactId>
+             <version>0.9.0.M2</version>
+         </dependency>
     </dependencies>
 
     <build>
@@ -58,9 +41,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2</version>
                 <configuration>
-                    <goalPrefix>fabric3</goalPrefix>
+                    <goalPrefix>fabric3-assembly</goalPrefix>
                 </configuration>
             </plugin>
         </plugins>
@@ -71,7 +54,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.2</version>
             </plugin>
         </plugins>
     </reporting>

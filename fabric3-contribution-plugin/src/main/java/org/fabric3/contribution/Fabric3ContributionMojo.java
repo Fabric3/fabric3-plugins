@@ -93,7 +93,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     /**
      * Build output directory.
      *
-     * @parameter expression="${project.build.directory}"
+     * @parameter property="project.build.directory"
      * @required
      */
     protected File outputDirectory;
@@ -101,7 +101,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     /**
      * Name of the generated composite archive.
      *
-     * @parameter expression="${project.build.finalName}"
+     * @parameter property="project.build.finalName"
      */
     protected String contributionName;
 
@@ -115,7 +115,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     /**
      * Directory containing the classes to include in the archive.
      *
-     * @parameter expression="${project.build.outputDirectory}"
+     * @parameter property="project.build.outputDirectory"
      * @required
      */
     protected File classesDirectory;
@@ -130,7 +130,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     /**
      * The Jar archiver.
      *
-     * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#jar}"
+     * @parameter property="component.org.codehaus.plexus.archiver.Archiver#jar"
      * @required
      * @readonly
      */
@@ -139,7 +139,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     /**
      * The maven project.
      *
-     * @parameter expression="${project}"
+     * @parameter property="project"
      * @required
      * @readonly
      */
@@ -153,7 +153,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     protected MavenProjectHelper projectHelper;
 
     /**
-     * @parameter expression="${project.packaging}
+     * @parameter property="project.packaging}
      * @required
      * @readonly
      */
