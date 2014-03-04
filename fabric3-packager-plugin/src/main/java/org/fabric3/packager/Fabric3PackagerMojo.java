@@ -175,11 +175,6 @@ public class Fabric3PackagerMojo extends AbstractMojo {
         extensions[length].setGroupId(F3_ARTIFACT_ID);
         extensions[length].setArtifactId("fabric3-databinding-json");
         extensions[length].setVersion(runtimeVersion);
-
-        extensions[length + 1] = new Dependency();
-        extensions[length + 1].setGroupId(F3_ARTIFACT_ID);
-        extensions[length + 1].setArtifactId("fabric3-node-servlet");
-        extensions[length + 1].setVersion(runtimeVersion);
     }
 
     /**
