@@ -79,7 +79,7 @@ import org.eclipse.aether.resolution.ArtifactResult;
  */
 @SuppressWarnings("JavaDoc")
 public class Fabric3PackagerMojo extends AbstractMojo {
-    public static final String F3_ARTIFACT_ID = "org.codehaus.fabric3";
+    public static final String F3_ARTIFACT_ID = "org.fabric3";
     public static final String F3_EXTENSIONS_JAR = "f3.extensions.jar";
     private static final int BUFFER = 2048;
 

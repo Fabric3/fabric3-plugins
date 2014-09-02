@@ -197,7 +197,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         } else {
             throw new MojoExecutionException("Invalid runtime type specified: " + type);
         }
-        extractRuntime("org.codehaus.fabric3", artifactId, baseDirectory);
+        extractRuntime("org.fabric3", artifactId, baseDirectory);
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
         installDatasources(rootDirectory);
