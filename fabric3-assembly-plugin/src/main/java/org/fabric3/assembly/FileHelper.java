@@ -57,7 +57,7 @@ public class FileHelper {
 
     /**
      * Delete a file. If file is a directory, delete it and all sub-directories.
-     * <p/>
+     *
      * The difference between File.delete() and this method are: <ul> <li>A directory to be deleted does not have to be empty.</li> <li>You get exceptions when
      * a file or directory cannot be deleted. (java.io.File methods returns a boolean)</li> </ul>
      *

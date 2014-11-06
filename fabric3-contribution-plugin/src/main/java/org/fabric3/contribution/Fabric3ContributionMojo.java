@@ -58,15 +58,15 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 /**
  * Builds an SCA contribution.
- * <p/>
+ *
  * Contribution archives may be jars or zip files as specified by the respective Maven packaging entries,
  * <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code> and <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code>. Any
  * required project dependencies (e.g. not scoped as provided) that are not themselves SCA contributions will be added to the archive's META-INF/lib
  * directory, making them available to the contribution and runtime extension classpaths.
- * <p/>
+ *
  * The following is an example plugin configuration:
  * <pre>
- * <p/>
+ *
  * &lt;build&gt;
  *   &lt;plugins&gt;
  *     &lt;plugin&gt;
