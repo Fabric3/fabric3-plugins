@@ -153,7 +153,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     protected MavenProjectHelper projectHelper;
 
     /**
-     * @parameter property="project.packaging}
+     * @parameter property="project.packaging"
      * @required
      * @readonly
      */
