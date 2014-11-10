@@ -1,40 +1,19 @@
 /*
-* Fabric3
-* Copyright (c) 2009-2013 Metaform Systems
-*
-* Fabric3 is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as
-* published by the Free Software Foundation, either version 3 of
-* the License, or (at your option) any later version, with the
-* following exception:
-*
-* Linking this software statically or dynamically with other
-* modules is making a combined work based on this software.
-* Thus, the terms and conditions of the GNU General Public
-* License cover the whole combination.
-*
-* As a special exception, the copyright holders of this software
-* give you permission to link this software with independent
-* modules to produce an executable, regardless of the license
-* terms of these independent modules, and to copy and distribute
-* the resulting executable under terms of your choice, provided
-* that you also meet, for each linked independent module, the
-* terms and conditions of the license of that module. An
-* independent module is a module which is not derived from or
-* based on this software. If you modify this software, you may
-* extend this exception to your version of the software, but
-* you are not obligated to do so. If you do not wish to do so,
-* delete this exception statement from your version.
-*
-* Fabric3 is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty
-* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-* See the GNU General Public License for more details.
-*
-* You should have received a copy of the
-* GNU General Public License along with Fabric3.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Fabric3
+ * Copyright (c) 2009-2015 Metaform Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.fabric3.contribution;
 
 import java.io.File;
@@ -58,32 +37,36 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 /**
  * Builds an SCA contribution.
- *
- * Contribution archives may be jars or zip files as specified by the respective Maven packaging entries,
- * <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code> and <code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code>. Any
- * required project dependencies (e.g. not scoped as provided) that are not themselves SCA contributions will be added to the archive's META-INF/lib
- * directory, making them available to the contribution and runtime extension classpaths.
- *
- * The following is an example plugin configuration:
- * <pre>
- *
- * &lt;build&gt;
- *   &lt;plugins&gt;
- *     &lt;plugin&gt;
- *       &lt;groupId&gt;org.codehaus.fabric3&lt;/groupId&gt;
- *       &lt;artifactId&gt;fabric3-contribution-plugin&lt;/artifactId&gt;
- *       &lt;version&gt;RELEASE&lt;/version&gt;
- *       &lt;extensions&gt;true&lt;/extensions&gt;
- *      &lt;/plugin&gt;
- *    &lt;/plugins&gt;
- *  &lt;/build&gt;
- * </pre>
- *
- * @goal package
- * @phase package
- * @requiresDependencyResolution runtime
- * @threadSafe
- */
+ * <p/>
+ * Contribution archives may be jars or zip files as specified by the respective Maven packaging entries, <code>&lt;packaging&gt;sca-contribution-jar&lt;
+ * /packaging&gt;</code>
+        *and<code>&lt;packaging&gt;sca-contribution-jar&lt;/packaging&gt;</code>.Any required project dependencies(e.g.not scoped as provided)that are not
+        *themselves SCA contributions will be added to the archive's META-INF/lib directory, making them available to the contribution and runtime extension
+ * *classpaths.
+        *<p/>
+        *The following is an example plugin configuration:
+        *<pre>
+        *
+        *&lt;build&gt;
+        *&lt;plugins&gt;
+        *&lt;plugin&gt;
+        *&lt;groupId&gt;org.codehaus.fabric3&lt;/groupId&gt;
+        *&lt;artifactId&gt;fabric3-contribution-plugin&lt;/artifactId&gt;
+        *&lt;version&gt;RELEASE&lt;/version&gt;
+        *&lt;extensions&gt;true&lt;/extensions&gt;
+        *&lt;/plugin&gt;
+        *&lt;/plugins&gt;
+        *&lt;/build&gt;
+        *</pre>
+        *
+        *
+
+@goal package
+        *@phase package
+        *@requiresDependencyResolution runtime
+        *@threadSafe
+*/
+
 public class Fabric3ContributionMojo extends AbstractMojo {
     private static final String JAR_PACKAGING = "sca-contribution-jar";
 
@@ -197,8 +180,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
             archiver.createArchive(project, archive);
 
             return contribution;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new MojoExecutionException("Error assembling contribution", e);
         }
 
@@ -229,8 +211,8 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     }
 
     /**
-     * Copies all transitive dependencies to the output archive that are required for runtime operation, excluding other SCA contributions as they
-     * will be deployed separately.
+     * Copies all transitive dependencies to the output archive that are required for runtime operation, excluding other SCA contributions as they will be
+     * deployed separately.
      *
      * @throws IOException if an error occurs copying the dependencies
      */
@@ -239,8 +221,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         File libDir = new File(classesDirectory, "META-INF" + File.separator + "lib");
         ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
 
-        @SuppressWarnings("unchecked")
-        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+        @SuppressWarnings("unchecked") Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
         for (Artifact artifact : artifacts) {
             getLog().debug("checking " + artifact.getArtifactId());
             boolean isSCAContribution = artifact.getType().startsWith("sca-contribution");
