@@ -4,10 +4,10 @@
     <parent>
         <groupId>org.fabric3</groupId>
         <artifactId>fabric3-plugins</artifactId>
-        <version>2.5.2-SNAPSHOT</version>
+        <version>2.5.2</version>
     </parent>
     <artifactId>fabric3-contribution-plugin</artifactId>
-    <version>2.5.2-SNAPSHOT</version>
+    <version>2.5.2</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Contribution Plugin</name>
     <description>Plugin for creating contributions</description>
