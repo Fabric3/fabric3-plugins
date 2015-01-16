@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
@@ -39,6 +40,7 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
@@ -106,6 +108,15 @@ public class Fabric3PackagerMojo extends AbstractMojo {
      */
     public RepositorySystemSession session;
 
+    /**
+     * The project's remote repositories to use for the resolution of project dependencies.
+     *
+     * @parameter default-value="${project.remoteProjectRepositories}"
+     * @readonly
+     */
+    private List<RemoteRepository> projectRepositories;
+
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void execute() throws MojoExecutionException {
 
@@ -165,7 +176,7 @@ public class Fabric3PackagerMojo extends AbstractMojo {
 
             Artifact artifact = new DefaultArtifact(groupId, artifactId, "bin", "zip", version);
             try {
-                ArtifactResult result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
+                ArtifactResult result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, projectRepositories, null));
                 File source = result.getArtifact().getFile();
                 extract(source, extensionsDirectory);
             } catch (ArtifactResolutionException e) {
@@ -191,7 +202,7 @@ public class Fabric3PackagerMojo extends AbstractMojo {
             Artifact artifact = new DefaultArtifact(groupId, artifactId, classifier, type, version);
             ArtifactResult result;
             try {
-                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, null, null));
+                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, projectRepositories, null));
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(e.getMessage(), e);
             }
