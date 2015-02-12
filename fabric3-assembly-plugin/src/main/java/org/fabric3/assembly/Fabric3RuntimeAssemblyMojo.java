@@ -426,12 +426,12 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      * @throws MojoExecutionException if there is an error during installation
      */
     private void installJndiDependencies(File rootDirectory) throws MojoExecutionException {
-        if (datasources == null || datasources.length == 0) {
+        if (jndiDependencies == null || jndiDependencies.length == 0) {
             return;
         }
         File repository = new File(rootDirectory, "extensions");
-        File datasourceDir = new File(repository, "jndi");
-        datasourceDir.mkdirs();
+        File jndiDir = new File(repository, "jndi");
+        jndiDir.mkdirs();
         for (Dependency dependency : jndiDependencies) {
             String groupId = dependency.getGroupId();
             String artifactId = dependency.getArtifactId();
@@ -452,7 +452,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             OutputStream targetStream = null;
             try {
                 sourceStream = new BufferedInputStream(new FileInputStream(source));
-                File targetFile = new File(datasourceDir, source.getName());
+                File targetFile = new File(jndiDir, source.getName());
                 targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
                 copy(sourceStream, targetStream);
             } catch (IOException e) {
