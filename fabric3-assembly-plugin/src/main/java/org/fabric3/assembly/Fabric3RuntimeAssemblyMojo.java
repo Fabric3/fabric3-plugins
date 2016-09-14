@@ -142,6 +142,14 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     public Dependency[] datasources = new Dependency[0];
 
     /**
+     * Set of jndi dependencies to install in the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] jndiDependencies = new Dependency[0];
+
+
+    /**
      * @component
      */
     public RepositorySystem repositorySystem;
@@ -184,6 +192,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
         installDatasources(rootDirectory);
+        installJndiDependencies(rootDirectory);
         installContributions(rootDirectory);
         installConfiguration(rootDirectory);
         removeExtensions(rootDirectory);
@@ -399,6 +408,51 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             try {
                 sourceStream = new BufferedInputStream(new FileInputStream(source));
                 File targetFile = new File(datasourceDir, source.getName());
+                targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
+                copy(sourceStream, targetStream);
+            } catch (IOException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } finally {
+                close(targetStream);
+                close(sourceStream);
+            }
+        }
+    }
+
+    /**
+     * Resolves and installs a set of configured jndi dependencies.
+     *
+     * @param rootDirectory the top-level runtime image directory
+     * @throws MojoExecutionException if there is an error during installation
+     */
+    private void installJndiDependencies(File rootDirectory) throws MojoExecutionException {
+        if (jndiDependencies == null || jndiDependencies.length == 0) {
+            return;
+        }
+        File repository = new File(rootDirectory, "extensions");
+        File jndiDir = new File(repository, "jndi");
+        jndiDir.mkdirs();
+        for (Dependency dependency : jndiDependencies) {
+            String groupId = dependency.getGroupId();
+            String artifactId = dependency.getArtifactId();
+            String version = dependency.getVersion();
+            String type = dependency.getType();
+            String classifier = dependency.getClassifier();
+            getLog().info("Installing jndi library: " + groupId + ":" + artifactId);
+            Artifact artifact = new DefaultArtifact(groupId, artifactId, classifier, type, version);
+            ArtifactResult result;
+            try {
+                result = repositorySystem.resolveArtifact(session, new ArtifactRequest(artifact, projectRepositories, null));
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+
+            File source = result.getArtifact().getFile();
+            InputStream sourceStream = null;
+            OutputStream targetStream = null;
+            try {
+                sourceStream = new BufferedInputStream(new FileInputStream(source));
+                File targetFile = new File(jndiDir, source.getName());
                 targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
                 copy(sourceStream, targetStream);
             } catch (IOException e) {
