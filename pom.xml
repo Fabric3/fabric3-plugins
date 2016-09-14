@@ -6,7 +6,7 @@
     <name>Fabric3 Plugins Parent POM</name>
     <description>Fabric3 Plugins Parent POM.</description>
     <packaging>pom</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
 
     <modules>
         <module>fabric3-contribution-plugin</module>
@@ -152,7 +152,7 @@
         <connection>scm:git:git@github.com:Fabric3/fabric3-plugins.git</connection>
         <developerConnection>scm:git:git@github.com:Fabric3/fabric3-plugins.git</developerConnection>
         <url>http://github.com/Fabric3/fabric3-plugins</url>
-        <tag>fabric3-plugins-3.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <licenses>
         <license>
